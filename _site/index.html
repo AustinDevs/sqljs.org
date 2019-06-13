@@ -14,21 +14,9 @@
   <main class="site-content">
   <h1>Online SQL Interpreter</h1>
 
-    <textarea id="commands">CREATE TABLE parents AS
-      SELECT "abraham" AS parent, "barack" AS child UNION
-      SELECT "abraham"          , "clinton"         UNION
-      SELECT "delano"           , "herbert"         UNION
-      SELECT "fillmore"         , "abraham"         UNION
-      SELECT "fillmore"         , "delano"          UNION
-      SELECT "fillmore"         , "grover"          UNION
-      SELECT "eisenhower"       , "fillmore";
-
-SELECT * from parents;
-    </textarea>
+    <textarea id="commands" rows="20"></textarea>
 
       <button id="execute" class="button"><i class="fa fa-bolt" aria-hidden="true"></i> Execute</button>
-      <button id="refresh" class="button" onClick="window.location.reload()"><i class="fa fa-refresh" aria-hidden="true"></i> Refresh</button>
-      <button id='savedb'  class="button"><i class="fa fa-cloud-download" aria-hidden="true"></i> Save db</button>
       <label class="button"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Load db: <input type='file' id='dbfile' ></label>
 
       <div id="error" class="error"></div>
