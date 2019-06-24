@@ -2,8 +2,8 @@ var execBtn = document.getElementById("execute");
 var outputElm = document.getElementById('output');
 var errorElm = document.getElementById('error');
 var commandsElm = document.getElementById('commands');
-var dbFileElm = document.getElementById('dbfile');
-var savedbElm = document.getElementById('savedb');
+// var dbFileElm = document.getElementById('dbfile');
+// var savedbElm = document.getElementById('savedb');
 
 // Start the worker in which sql.js will run
 var worker = new Worker("worker.sql.js");
@@ -93,26 +93,54 @@ var editor = CodeMirror.fromTextArea(commandsElm, {
 });
 
 // Load a db from a file
-dbFileElm.onchange = function() {
-	var f = dbFileElm.files[0];
-	var r = new FileReader();
-	r.onload = function() {
-		worker.onmessage = function () {
-			toc("Loading database from file");
-			// Show the schema of the loaded database
-			// editor.setValue("SELECT `name`, `sql`\n  FROM `sqlite_master`\n  WHERE type='table';");
-			// execEditorContents();
-		};
-		tic();
-		try {
-			worker.postMessage({action:'open',buffer:r.result}, [r.result]);
-		}
-		catch(exception) {
-			worker.postMessage({action:'open',buffer:r.result});
-		}
+// dbFileElm.onchange = function() {
+// 	loadDb(dbFileElm.files[0]);
+// }
+
+// function loadDb(arrayBuffer) {
+// 	var r = new FileReader();
+// 	r.onload = function() {
+// 		worker.onmessage = function () {
+// 			toc("Loading database from file");
+// 			// Show the schema of the loaded database
+// 			// editor.setValue("SELECT `name`, `sql`\n  FROM `sqlite_master`\n  WHERE type='table';");
+// 			// execEditorContents();
+// 		};
+// 		tic();
+// 		try {
+// 			worker.postMessage({action:'open',buffer:r.result}, [r.result]);
+// 		}
+// 		catch(exception) {
+// 			worker.postMessage({action:'open',buffer:r.result});
+// 		}
+// 	}
+// 	r.readAsArrayBuffer(arrayBuffer);
+// }
+
+var xhr = new XMLHttpRequest();
+// For example: https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite
+xhr.open('GET', './chinook.db', true);
+xhr.responseType = 'arraybuffer';
+
+xhr.onload = e => {
+  worker.onmessage = function () {
+		toc("Loading database from file");
+		// Show the schema of the loaded database
+		// editor.setValue("SELECT `name`, `sql`\n  FROM `sqlite_master`\n  WHERE type='table';");
+		// execEditorContents();
+	};
+	tic();
+	try {
+		worker.postMessage({action:'open',buffer:xhr.response}, [xhr.response]);
 	}
-	r.readAsArrayBuffer(f);
-}
+	catch(exception) {
+		worker.postMessage({action:'open',buffer:xhr.response});
+	}
+  // var db = new SQL.Database(uInt8Array);
+  // var contents = db.exec("SELECT * FROM my_table");
+  // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
+};
+xhr.send();
 
 // Save the db to a file
 function savedb () {
@@ -133,4 +161,4 @@ function savedb () {
 	tic();
 	worker.postMessage({action:'export'});
 }
-savedbElm.addEventListener("click", savedb, true);
+// savedbElm.addEventListener("click", savedb, true);
