@@ -119,7 +119,7 @@ var editor = CodeMirror.fromTextArea(commandsElm, {
 
 var xhr = new XMLHttpRequest();
 // For example: https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite
-xhr.open('GET', './chinook.db', true);
+xhr.open('GET', './sample.db', true);
 xhr.responseType = 'arraybuffer';
 
 xhr.onload = e => {
